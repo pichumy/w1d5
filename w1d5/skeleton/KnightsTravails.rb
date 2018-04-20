@@ -26,25 +26,38 @@ class KnightPathFinder
   
   
   def initialize(start_pos)
-    @path = [start_pos]
+    @path = []
     @visited_positions = [start_pos]
-    @tree = build_move_tree(start_pos)
+    parent = PolyTreeNode.new(start_pos)
+    @tree = build_move_tree(parent)
     
   end
   
   def find_path(target_pos)
-    
+    target = @tree.dfs(target_pos)
+    trace_path_back(target)
+    @path.push(target_pos)
   end
   
-  def build_move_tree(start)
-    parent = PolyTreeNode.new(start)
-    val_moves = new_move_positions(start)
-    val_moves.each do |move|
-      child = PolyTreeNode.new(move)
-      child.parent = parent
-    end
+  def trace_path_back(target)
+    return @path if target.parent.nil? 
+    trace_path_back(target.parent).push(target.parent.value)
+  end 
+  
+  def build_move_tree(parent_node)
+    queue = [parent_node]
+    until queue.empty? 
+      parent = queue.shift 
+      val_moves = new_move_positions(parent.value)
+      val_moves.each do |move|
+        child = PolyTreeNode.new(move)
+        child.parent = parent
+        queue.push(child)
+      end
+      @visited_positions.push(parent.value)
+    end 
 
-    parent
+    parent_node
   end
   
   def display_tree
@@ -53,5 +66,6 @@ class KnightPathFinder
   
 end 
 
-kpf = KnightPathFinder.new([0, 1])
-kpf.display_tree
+kpf = KnightPathFinder.new([0, 0])
+#kpf.display_tree
+p kpf.find_path([6,2])
