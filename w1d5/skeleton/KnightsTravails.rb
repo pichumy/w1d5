@@ -30,7 +30,6 @@ class KnightPathFinder
     @visited_positions = [start_pos]
     parent = PolyTreeNode.new(start_pos)
     @tree = build_move_tree(parent)
-    
   end
   
   def find_path(target_pos)
@@ -68,4 +67,4 @@ end
 
 kpf = KnightPathFinder.new([0, 0])
 #kpf.display_tree
-p kpf.find_path([6,2])
+p kpf.find_path([7, 6])
